@@ -24,8 +24,6 @@ from keras.callbacks import ModelCheckpoint
 max_words = 5000
 max_len = 200
 
-logging.getLogger('flask_cors').level = logging.DEBUG
-
 sentiment = ['neutral', 'negative', 'positive']
 
 app = Flask(__name__)
@@ -36,7 +34,7 @@ def home():
     return render_template("index.html",result='infer')
 
 
-@app.route("/train")
+@app.route("/train", methods=["GET"])
 def train():
 
     if request.method == "GET":
@@ -86,32 +84,31 @@ def train():
 
 @app.route("/infer", methods=["POST"])
 def infer():
-    print("entered -->")
-    # if request.method == "POST":
+    if request.method == "POST":
 
-    body = json.loads(request.data.decode("utf-8"))
-    text = body.get("text", "")
+        body = json.loads(request.data.decode("utf-8"))
+        text = body.get("text", "")
 
-    cleaner = Cleaner()
-    text = clean_text(cleaner, text)
+        cleaner = Cleaner()
+        text = clean_text(cleaner, text)
 
-    tokenizer = joblib.load(os.path.join(MODELS,"tokenizer.pkl"))
-    sequence = tokenizer.texts_to_sequences([text])
-    test = pad_sequences(
-        sequence, maxlen=max_len
-    )
+        tokenizer = joblib.load(os.path.join(MODELS,"tokenizer.pkl"))
+        sequence = tokenizer.texts_to_sequences([text])
+        test = pad_sequences(
+            sequence, maxlen=max_len
+        )
 
-    _, model = create_BiLSTMRNN()
-    model.load_weights(
-        os.path.join(MODELS, 'BiLSTM.hdf5'))
-    return jsonify(
-        result= sentiment[
-            np.around(model.predict(test), decimals=0).argmax(axis=1)[0]]
-    )
-    # else:
-    #     return jsonify(
-    #         result="POST API call is required"
-    #     )
+        _, model = create_BiLSTMRNN()
+        model.load_weights(
+            os.path.join(MODELS, 'BiLSTM.hdf5'))
+        return jsonify(
+            result= sentiment[
+                np.around(model.predict(test), decimals=0).argmax(axis=1)[0]]
+        )
+    else:
+        return jsonify(
+            result="POST API call is required"
+        )
 
 
 def train_model(X_train, X_test, y_train, y_test):
