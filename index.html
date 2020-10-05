@@ -1,0 +1,84 @@
+<html>
+<head>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</head>
+<style>
+
+</style>
+<body>
+<div class="panel panel-primary" style="width:50%;margin:auto;margin-top:5%">
+  <div class="panel-heading">Sentimental Analysis - Demo</div>
+  <div class="panel-body" style="display: flex;flex-direction: column;">
+	<div>
+		<form class="navbar-form navbar-left">
+		<div class="form-group">
+		  <input id="userInput" type="text" class="form-control" placeholder="Please type text here">
+		</div>
+		<button type="button" class="btn btn-default" onclick="getSentimentalAnalysisResult()">Submit</button>
+		</form>
+	</div>
+	<div style="display:flex;flex-direction:row">
+	  <div style="margin-top: 17px;margin-left: 15px;"><span>Result:</span></div>
+	  <div class="btn-group" role="group" aria-label="..." style="padding: 10px 15px">	  
+		  <button id="positive" style="pointer-events:none" type="button" class="btn btn-default">Positive</button>
+		  <button id="neutral" style="pointer-events:none" type="button" class="btn btn-default">Neutral</button>
+		  <button id="negative" style="pointer-events:none" type="button" class="btn btn-default">Negative</button>
+	  </div>
+	</div>
+	
+  </div>
+</div>
+
+</body>
+
+<script>
+function getSentimentalAnalysisResult(){
+	let userInput = document.getElementById("userInput").value;
+	console.log("userInput->",userInput);
+
+	var data = JSON.stringify({"text":userInput});
+
+	var xhr = new XMLHttpRequest();
+	xhr.withCredentials = true;
+
+	xhr.addEventListener("readystatechange", function() {
+	  if(this.readyState === 4) {
+		console.log(this.responseText);
+	  }
+	});
+
+	xhr.open("POST", "http://0.0.0.0:5000/infer");
+	xhr.setRequestHeader("Access-Control-Request-Headers", "application/json");
+	xhr.setRequestHeader("Content-Type", "application/json");
+	xhr.send(data);
+
+	xhr.onreadystatechange = (e) => {
+		document.getElementById("positive").classList.remove('btn-success');
+		document.getElementById("neutral").classList.remove('btn-primary');
+		document.getElementById("negative").classList.remove('btn-danger');
+
+		var data = xhr.responseText;
+		let parsed = JSON.parse(data.toString());
+		console.log("parsed:",parsed.result);
+		  if(parsed.result == 'positive'){
+	 	      document.getElementById("positive").classList.add("btn-success");
+		  }else if(parsed.result == 'neutral'){
+			document.getElementById("neutral").classList.add("btn-primary");
+		  }else if(parsed.result == 'negative'){
+			document.getElementById("negative").classList.add("btn-danger");
+		  }
+
+	}
+
+
+  		
+}
+</script>
+</html>
