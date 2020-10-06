@@ -2,7 +2,7 @@
 
 ## Frontend
 
-    Bootstrap UI
+    Bootstrap UI - simple UI to show positive, negative or neutral for a sentence
 
 ## Backend - Sentiment Analysis Flask App
 
@@ -17,7 +17,18 @@
 ### Install requirements.txt
     pip install -r requirements.txt
     
-### Download Tweet-sentiment-extraction data from kaggle()
+### Download Tweet-sentiment-extraction data from kaggle( https://www.kaggle.com/c/tweet-sentiment-extraction/overview)
+
+    unzip it and place the files into tweet-sentiment-extraction folder
+    
+## Deployment
+
+    sudo apt install screen
+    screen
+    conda activate senti
+    python app.py
+    
+
     
     
  
