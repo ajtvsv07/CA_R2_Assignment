@@ -12,10 +12,12 @@
 ## Environment Setup
 
 ### create virtual environment
-    conda create --name senti python=3.7
+    conda create --name senti python=3.6
     
 ### Install requirements.txt
     pip install -r requirements.txt
+    
+### Download Tweet-sentiment-extraction data from kaggle()
     
     
  

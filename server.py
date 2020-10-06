@@ -89,6 +89,11 @@ def infer():
         body = json.loads(request.data.decode("utf-8"))
         text = body.get("text", "")
 
+        if text == "":
+            return Jsonify(
+                result=""
+            )
+
         cleaner = Cleaner()
         text = clean_text(cleaner, text)
 
