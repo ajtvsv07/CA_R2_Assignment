@@ -6,8 +6,8 @@
 
 ## Backend - Sentiment Analysis Flask App
 
-    1. CNN1D Train API
-    2. CNN1D Inference API
+    1. BiLSTM Train API
+    2. BiLSTM Inference API
     
 ## Environment Setup
 
